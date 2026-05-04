@@ -1,9 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
   <div class="container">
     <a class="navbar-brand" href="#">Freelance Marketplace</a>
     <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/login">Login</a>
-      <a class="nav-link" routerLink="/register">Register</a>
+      <a class="nav-link" routerLink="/login" *ngIf="!isLoggedIn()">Login</a>
+      <a class="nav-link" routerLink="/register" *ngIf="!isLoggedIn()">Register</a>
+
+      <a class="nav-link" style="cursor: pointer;" (click)="onLogout()" *ngIf="isLoggedIn()">Logout</a>
     </div>
   </div>
 </nav>
