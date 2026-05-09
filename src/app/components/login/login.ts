@@ -22,7 +22,7 @@ export class Login {
       next: (response: any) => {
         console.log("Login Response Received:", response);
 
-        // 1. Token එක save කරගන්නවා
+        // 1. Save the token
         localStorage.setItem('token', response.token);
 
         // 2. මුළු User Object එකම (id, role, username සහිතව) save කරනවා
@@ -31,7 +31,7 @@ export class Login {
 
         alert("Login Successful!");
 
-        // 3. සාර්ථකව login වුණාම dashboard එකට යවනවා
+        // 3.Navigate to the dashboard after the successfully login
         this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {

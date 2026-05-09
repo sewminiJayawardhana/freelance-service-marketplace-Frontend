@@ -20,6 +20,7 @@ export class Navbar {
   // Logout වෙන හැටි
   onLogout() {
     localStorage.removeItem('token'); // Token එක අයින් කරනවා
+    localStorage.removeItem('currentUser');
     this.router.navigate(['/login']); // Login එකට යවනවා
   }
 }

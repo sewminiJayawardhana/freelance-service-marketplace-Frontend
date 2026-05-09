@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <!-- Profile Card -->
+      <div class="card shadow border-0 overflow-hidden">
+        <div class="card-header bg-dark text-white text-center py-5">
+          <div class="mb-3">
+            <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+          </div>
+          <h2 class="fw-bold mb-0">{{ user?.username }}</h2>
+          <p class="text-info mb-0">{{ user?.role }}</p>
+        </div>
+
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Account Information</h5>
+
+          <div class="row mb-3">
+            <div class="col-sm-4 text-muted">User ID</div>
+            <div class="col-sm-8 fw-semibold"># {{ user?.id }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-4 text-muted">Username</div>
+            <div class="col-sm-8 fw-semibold">{{ user?.username }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-4 text-muted">Account Type</div>
+            <div class="col-sm-8">
+              <span class="badge" [ngClass]="user?.role === 'CLIENT' ? 'bg-primary' : 'bg-success'">
+                {{ user?.role }}
+              </span>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-dark">Update Password</button>
+            <button class="btn btn-primary">Edit Profile Bio</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

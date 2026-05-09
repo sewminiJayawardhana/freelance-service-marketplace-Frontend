@@ -1,11 +1,36 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
   <div class="container">
-    <a class="navbar-brand" href="#">Freelance Marketplace</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/login" *ngIf="!isLoggedIn()">Login</a>
-      <a class="nav-link" routerLink="/register" *ngIf="!isLoggedIn()">Register</a>
+    <a class="navbar-brand fw-bold" routerLink="/dashboard">Freelance Marketplace</a>
 
-      <a class="nav-link" style="cursor: pointer;" (click)="onLogout()" *ngIf="isLoggedIn()">Logout</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ms-auto align-items-center">
+        <!-- Common Dashboard Link -->
+        <a class="nav-link" routerLink="/dashboard" *ngIf="isLoggedIn()">Dashboard</a>
+
+        <!-- Client Specific Links -->
+        <a class="nav-link" routerLink="/my-jobs" *ngIf="isLoggedIn()">My Posted Jobs</a>
+
+        <!-- Freelancer Specific Links -->
+        <a class="nav-link" routerLink="/my-applications" *ngIf="isLoggedIn() ">My Applications</a>
+
+        <!-- Profile Link -->
+        <a class="nav-link" routerLink="/profile" *ngIf="isLoggedIn()">
+          <i class="bi bi-person-circle me-1"></i> Profile
+        </a>
+
+        <!-- Auth Links -->
+        <a class="nav-link btn btn-outline-light ms-lg-2 px-3" routerLink="/login" *ngIf="!isLoggedIn()">Login</a>
+        <a class="nav-link ms-lg-2" routerLink="/register" *ngIf="!isLoggedIn()">Register</a>
+
+        <!-- Logout -->
+        <a class="nav-link text-danger ms-lg-3" style="cursor: pointer;" (click)="onLogout()" *ngIf="isLoggedIn()">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
     </div>
   </div>
 </nav>
