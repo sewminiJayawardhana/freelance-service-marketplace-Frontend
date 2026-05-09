@@ -17,6 +17,8 @@ export class DashboardComponent implements OnInit {
   jobs: any[] = [];
   loggedInUser: any = null;
 
+  selectedJob: any = null;
+
   newJob = {
     title: '',
     category: 'Web Development',
@@ -76,6 +78,20 @@ export class DashboardComponent implements OnInit {
         alert("Failed to post job. Please check console.");
       }
     });
+  }
+
+  // Function to set the selected job when "View Details" is clicked
+  viewJobDetails(job: any) {
+    this.selectedJob = job;
+    console.log("Viewing Job:", this.selectedJob);
+  }
+
+// Placeholder for future Application logic
+  applyForJob() {
+    if (this.selectedJob) {
+      alert(`Application started for: ${this.selectedJob.title}`);
+      // Next step: Implement an Application modal or API call
+    }
   }
 
   private resetForm() {

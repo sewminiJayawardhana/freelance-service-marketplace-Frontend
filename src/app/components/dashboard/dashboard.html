@@ -2,7 +2,7 @@
   <!-- Header Section -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">Available Freelance Jobs</h2>
-    <!-- Role එක CLIENT නම් පමණක් බොත්තම පෙන්වයි -->
+    <!-- If Role is client,display the post a job button.-->
     <button class="btn btn-primary" *ngIf="loggedInUser?.role === 'CLIENT'" data-bs-toggle="modal" data-bs-target="#jobModal">
       + Post a Job
     </button>
@@ -25,7 +25,12 @@
           </p>
         </div>
         <div class="card-footer bg-transparent border-0 pb-3">
-          <button class="btn btn-outline-primary btn-sm w-100">View Details</button>
+          <button class="btn btn-outline-primary btn-sm w-100"
+                  data-bs-toggle="modal"
+                  data-bs-target="#viewJobModal"
+                  (click)="viewJobDetails(job)">
+            View Details
+          </button>
         </div>
       </div>
     </div>
@@ -83,6 +88,42 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+//------
+<div class="modal fade" id="viewJobModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-0">
+        <h4 class="fw-bold text-primary mb-0">{{ selectedJob?.title }}</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="d-flex gap-2 mb-3">
+          <span class="badge bg-light text-dark border">{{ selectedJob?.category }}</span>
+          <span class="badge bg-success">${{ selectedJob?.budget }}</span>
+        </div>
+
+        <h6 class="fw-bold text-muted text-uppercase small">Job Description</h6>
+        <p class="fs-5" style="white-space: pre-line;">{{ selectedJob?.description }}</p>
+
+        <hr class="my-4">
+
+        <!-- Only show Apply button for Freelancers -->
+        <div class="d-grid" *ngIf="loggedInUser?.role === 'FREELANCER'">
+          <button class="btn btn-primary btn-lg fw-bold" (click)="applyForJob()">
+            Apply for this Job
+          </button>
+        </div>
+
+        <!-- Message for Clients -->
+        <p class="text-center text-muted small" *ngIf="loggedInUser?.role === 'CLIENT'">
+          You cannot apply for your own or other client's jobs.
+        </p>
       </div>
     </div>
   </div>
