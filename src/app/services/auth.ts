@@ -6,17 +6,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth'; // ඔයාගේ Backend URL එක
+  private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) { }
 
   register(userData: any): Observable<any> {
-    // Backend එකේ register API එකට දත්ත යවනවා
+    // Register එකට තවමත් text response එකක් ලැබෙන නිසා මෙය එලෙසම තබන්න
     return this.http.post(`${this.apiUrl}/register`, userData, { responseType: 'text' });
   }
 
   login(credentials: any): Observable<any> {
-    // Backend එකේ login API එකට දත්ත යවනවා
-    return this.http.post(`${this.apiUrl}/login`, credentials, { responseType: 'text' });
+
+    // දැන් Backend එකෙන් AuthResponse JSON එකක් ලැබෙන නිසා <any> ලෙස භාවිතා කරන්න
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
 }

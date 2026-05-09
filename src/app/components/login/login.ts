@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -19,14 +18,24 @@ export class Login {
 
   onLogin() {
     this.authService.login(this.credentials).subscribe({
-      next: (token: string) => {
-        // Token එක browser එකේ save කරගන්නවා
-        localStorage.setItem('token', token);
+      // දැන් මෙතැනට (token: string) වෙනුවට (response: any) ලැබෙනවා
+      next: (response: any) => {
+        console.log("Login Response Received:", response);
+
+        // 1. Token එක save කරගන්නවා
+        localStorage.setItem('token', response.token);
+
+        // 2. මුළු User Object එකම (id, role, username සහිතව) save කරනවා
+        // Dashboard එකේ button එක පෙන්වීමට මෙය අනිවාර්යයි
+        localStorage.setItem('currentUser', JSON.stringify(response));
+
         alert("Login Successful!");
-        // සාර්ථකව login වුණාම අපිව dashboard එකට යවන්න පුළුවන් (දැනට අපි නිකම්ම dashboard එකට route කරමු)
+
+        // 3. සාර්ථකව login වුණාම dashboard එකට යවනවා
         this.router.navigate(['/dashboard']);
       },
-      error: (err:any) => {
+      error: (err: any) => {
+        console.error("Login failed error:", err);
         alert("Login Failed! Please check credentials.");
       }
     });
