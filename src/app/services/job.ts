@@ -19,4 +19,17 @@ export class JobService{
   createJob(jobData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, jobData);
   }
+
+  applyToJob(applicationData: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Bearer ${token}` }; // Attach the JWT token
+
+    return this.http.post(
+      `http://localhost:8080/api/applications/apply`,
+      applicationData,
+      { headers }
+    );
+  }
 }
+
+

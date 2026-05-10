@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { JobService } from '../../services/job';
 import { FormsModule } from '@angular/forms';
 
-// Bootstrap භාවිතා කිරීමට අවශ්‍යයි
 declare var bootstrap: any;
 
 @Component({
@@ -16,8 +15,10 @@ declare var bootstrap: any;
 export class DashboardComponent implements OnInit {
   jobs: any[] = [];
   loggedInUser: any = null;
-
   selectedJob: any = null;
+
+  // UI Control
+  showApplyForm: boolean = false;
 
   newJob = {
     title: '',
@@ -27,17 +28,14 @@ export class DashboardComponent implements OnInit {
     user: { id: null as any }
   };
 
+  applyForm = { coverLetter: '' };
+
   constructor(private jobService: JobService) {}
 
   ngOnInit(): void {
     const userJson = localStorage.getItem('currentUser');
-    console.log("Raw JSON from Storage:", userJson); // මේක පේනවාද බලන්න
-
     if (userJson) {
       this.loggedInUser = JSON.parse(userJson);
-      console.log("Parsed User Object:", this.loggedInUser);
-      console.log("User Role:", this.loggedInUser?.role); // මෙතන 'CLIENT' ද තියෙන්නේ?
-
       if (this.loggedInUser?.id) {
         this.newJob.user.id = this.loggedInUser.id;
       }
@@ -52,8 +50,47 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  viewJobDetails(job: any) {
+    this.selectedJob = job;
+    this.showApplyForm = false; // Reset form view when opening a new job
+    this.applyForm.coverLetter = '';
+  }
+
+  toggleApplyForm() {
+    this.showApplyForm = !this.showApplyForm;
+  }
+
+  onApply() {
+    if (!this.applyForm.coverLetter.trim()) {
+      alert("Please write a cover letter first!");
+      return;
+    }
+
+    const payload = {
+      jobId: this.selectedJob.id,
+      freelancerId: this.loggedInUser.id,
+      coverLetter: this.applyForm.coverLetter
+    };
+
+    this.jobService.applyToJob(payload).subscribe({
+      next: (res) => {
+        alert("Application sent successfully!");
+        this.showApplyForm = false;
+        this.applyForm.coverLetter = '';
+
+        // Close Modal
+        const modalElement = document.getElementById('viewJobModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) modalInstance.hide();
+      },
+      error: (err) => {
+        // Backend එකෙන් "Already applied" වැනි message එකක් එනවා නම් එය පෙන්වයි
+        alert(err.error || "Failed to submit application.");
+      }
+    });
+  }
+
   onPostJob() {
-    // Session පරීක්ෂා කිරීම
     if (!this.newJob.user.id) {
       alert("Error: User session expired. Please login again.");
       return;
@@ -62,36 +99,14 @@ export class DashboardComponent implements OnInit {
     this.jobService.createJob(this.newJob).subscribe({
       next: (res) => {
         alert("Job Posted Successfully!");
-
-        // Modal එක TypeScript හරහා වසා දැමීම
         const modalElement = document.getElementById('jobModal');
-        if (modalElement) {
-          const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-          modalInstance.hide();
-        }
-
+        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+        modalInstance.hide();
         this.loadJobs();
         this.resetForm();
       },
-      error: (err) => {
-        console.error("Error details:", err);
-        alert("Failed to post job. Please check console.");
-      }
+      error: (err) => alert("Failed to post job.")
     });
-  }
-
-  // Function to set the selected job when "View Details" is clicked
-  viewJobDetails(job: any) {
-    this.selectedJob = job;
-    console.log("Viewing Job:", this.selectedJob);
-  }
-
-// Placeholder for future Application logic
-  applyForJob() {
-    if (this.selectedJob) {
-      alert(`Application started for: ${this.selectedJob.title}`);
-      // Next step: Implement an Application modal or API call
-    }
   }
 
   private resetForm() {

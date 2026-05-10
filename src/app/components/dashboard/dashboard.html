@@ -1,14 +1,11 @@
 <div class="container mt-4">
-  <!-- Header Section -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">Available Freelance Jobs</h2>
-    <!-- If Role is client,display the post a job button.-->
     <button class="btn btn-primary" *ngIf="loggedInUser?.role === 'CLIENT'" data-bs-toggle="modal" data-bs-target="#jobModal">
       + Post a Job
     </button>
   </div>
 
-  <!-- Jobs Display Section -->
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let job of jobs">
       <div class="card h-100 shadow-sm border-0">
@@ -34,32 +31,22 @@
         </div>
       </div>
     </div>
-
-    <!-- Jobs නැතිනම් පෙන්වන පණිවිඩය -->
-    <div class="col-12 text-center my-5" *ngIf="jobs.length === 0">
-      <div class="py-5">
-        <i class="bi bi-briefcase text-muted" style="font-size: 3rem;"></i>
-        <p class="text-muted mt-3 fs-5">No jobs available at the moment.</p>
-      </div>
-    </div>
   </div>
 </div>
 
-<!-- Job Post කරන Modal එක -->
-<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
+<div class="modal fade" id="jobModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title fw-bold" id="jobModalLabel">Post a New Job</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold">Post a New Job</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
         <form (ngSubmit)="onPostJob()" #jobForm="ngForm">
           <div class="mb-3">
             <label class="form-label fw-semibold">Job Title</label>
-            <input type="text" class="form-control" name="title" [(ngModel)]="newJob.title" placeholder="e.g. E-commerce Website" required>
+            <input type="text" class="form-control" name="title" [(ngModel)]="newJob.title" required>
           </div>
-
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">Category</label>
@@ -75,17 +62,12 @@
               <input type="number" class="form-control" name="budget" [(ngModel)]="newJob.budget" required>
             </div>
           </div>
-
           <div class="mb-4">
             <label class="form-label fw-semibold">Description</label>
             <textarea class="form-control" name="description" [(ngModel)]="newJob.description" rows="4" required></textarea>
           </div>
-
           <div class="d-grid">
-            <!-- data-bs-dismiss ඉවත් කර ඇත, TypeScript මගින් මෙය පාලනය කරයි -->
-            <button type="submit" class="btn btn-success btn-lg fw-bold" [disabled]="!jobForm.valid">
-              Submit Job Listing
-            </button>
+            <button type="submit" class="btn btn-success btn-lg fw-bold" [disabled]="!jobForm.valid">Submit Job Listing</button>
           </div>
         </form>
       </div>
@@ -93,8 +75,6 @@
   </div>
 </div>
 
-
-//------
 <div class="modal fade" id="viewJobModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content border-0 shadow">
@@ -113,16 +93,29 @@
 
         <hr class="my-4">
 
-        <!-- Only show Apply button for Freelancers -->
-        <div class="d-grid" *ngIf="loggedInUser?.role === 'FREELANCER'">
-          <button class="btn btn-primary btn-lg fw-bold" (click)="applyForJob()">
-            Apply for this Job
-          </button>
+        <div *ngIf="loggedInUser?.role === 'FREELANCER'">
+
+          <div class="d-grid" *ngIf="!showApplyForm">
+            <button class="btn btn-primary btn-lg fw-bold" (click)="toggleApplyForm()">
+              Apply for this Job
+            </button>
+          </div>
+
+          <div class="mt-4 p-3 bg-light rounded" *ngIf="showApplyForm">
+            <h6 class="fw-bold mb-3">Submit Your Application</h6>
+            <label class="form-label fw-semibold">Cover Letter</label>
+            <textarea class="form-control mb-3" [(ngModel)]="applyForm.coverLetter" rows="4" placeholder="Briefly describe your experience for this job..."></textarea>
+
+            <div class="d-flex gap-2">
+              <button class="btn btn-success flex-grow-1 fw-bold" (click)="onApply()">Submit Application</button>
+              <button class="btn btn-outline-secondary" (click)="toggleApplyForm()">Cancel</button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Message for Clients -->
-        <p class="text-center text-muted small" *ngIf="loggedInUser?.role === 'CLIENT'">
-          You cannot apply for your own or other client's jobs.
+        <p class="text-center text-muted small mt-3" *ngIf="loggedInUser?.role === 'CLIENT'">
+          You are logged in as a Client. You can only manage your own job postings.
         </p>
       </div>
     </div>
